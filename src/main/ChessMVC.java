@@ -8,7 +8,7 @@ package main;
  *
  * @author Admin
  */
-public class P57_20109218 {
+public class ChessMVC {
 
     /**
      * @param args the command line arguments
@@ -17,4 +17,5 @@ public class P57_20109218 {
         // TODO code application logic here
     }
     
+   
 }
