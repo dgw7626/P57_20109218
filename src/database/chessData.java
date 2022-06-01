@@ -9,7 +9,33 @@ package database;
  * @author Admin
  */
 public class chessData {
-    boolean loginFlag = false;
-    boolean quitFlag = false;
-    int currentScore = 0;
+
+
+    private boolean loginFlag = false;
+    private boolean quitFlag = false;
+    private int currentScore = 0;
+    
+        public boolean isLoginFlag() {
+        return loginFlag;
+    }
+
+    public void setLoginFlag(boolean loginFlag) {
+        this.loginFlag = loginFlag;
+    }
+
+    public boolean isQuitFlag() {
+        return quitFlag;
+    }
+
+    public void setQuitFlag(boolean quitFlag) {
+        this.quitFlag = quitFlag;
+    }
+
+    public int getCurrentScore() {
+        return currentScore;
+    }
+
+    public void setCurrentScore(int currentScore) {
+        this.currentScore = currentScore;
+    }
 }
