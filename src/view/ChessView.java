@@ -6,6 +6,7 @@ package view;
 
 import ai_control.Piece;
 import database.chessData;
+import ai_control.ChessAI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -29,10 +30,11 @@ import javax.swing.*;
  *
  * @author Admin
  */
-public class ChessView extends JFrame implements Observer, MouseListener, MouseMotionListener{
+public class ChessView extends JFrame implements Observer, MouseListener, MouseMotionListener {
 
     public static LinkedList<Piece> LinkedPieces = new LinkedList<>();
     public static Piece currentPiece = null;
+
     //Player panel
     private JPanel loginPanel = new JPanel();
     //private BufferedImage img = ImageIO.read(new File("./resources/T06_bg.jpg"));
@@ -63,7 +65,9 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
     private String[] pieceNames = {"rook", "knight", "bishop", "queen", "king", "bishop", "knight", "rook"};
     private Piece whitePieces[] = new Piece[16];
     private boolean inGameStatus = false;
-    private boolean isAIturn = false;
+    public boolean isAIturn = false;
+    public ChessAI ai = new ChessAI();
+    private int counter = 0;
     public ChessView() {
         this.setTitle("Chess Program 0.2");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -191,7 +195,8 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
 
     public void inGame() {
         try {
-
+            this.getContentPane().removeAll();
+            ai.InitializeBehaviourSets();
             BufferedImage pieces = ImageIO.read(new File("./resources/pieces.png"));
             Image piece_imgs[] = new Image[12];
             int pos = 0;
@@ -203,33 +208,40 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
             }
 
             this.setTitle("Player VS Computer");
-            this.getContentPane().removeAll();
-            this.setSize(800, 600);
+            this.setSize(800, 545);
             // adding pieces
-            if(!inGameStatus){
-            for (int i = 0; i < 8; i++) {
-                this.blackPieces[i] = new Piece(i, 0, false, this.pieceNames[i], LinkedPieces, 64);
-                this.whitePieces[i] = new Piece(i, 7, true, this.pieceNames[i], LinkedPieces, 64);
-            }
-            for (int j = 8; j < 16; j++) {
-                if (j < 15) {
-                    this.blackPieces[j] = new Piece((j - 7), 1, false, "pawn", LinkedPieces, 64);
-                    this.whitePieces[j] = new Piece((j - 7), 6, true, "pawn", LinkedPieces, 64);
-                } else if (j == 15) {
-                    this.blackPieces[j] = new Piece(0, 1, false, "pawn", LinkedPieces, 64);
-                    this.whitePieces[j] = new Piece(0, 6, true, "pawn", LinkedPieces, 64);
+            if (!inGameStatus) {
+                for (int i = 0; i < 8; i++) {
+                    this.blackPieces[i] = new Piece(i, 0, false, this.pieceNames[i], LinkedPieces, 63);
+                    this.whitePieces[i] = new Piece(i, 7, true, this.pieceNames[i], LinkedPieces, 63);
                 }
-            }
-            inGameStatus = !inGameStatus;
+                for (int j = 8; j < 16; j++) {
+                    if (j < 15) {
+                        this.blackPieces[j] = new Piece((j - 7), 1, false, "pawn", LinkedPieces, 63);
+                        this.whitePieces[j] = new Piece((j - 7), 6, true, "pawn", LinkedPieces, 63);
+                    } else if (j == 15) {
+                        this.blackPieces[j] = new Piece(0, 1, false, "pawn", LinkedPieces, 63);
+                        this.whitePieces[j] = new Piece(0, 6, true, "pawn", LinkedPieces, 63);
+                    }
+                }
+                inGameStatus = !inGameStatus;
             }
             this.tiles = new Tiles(piece_imgs);
             tiles.setBounds(0, 0, 512, 512);
             this.tiles.addMouseListener(this);
             this.tiles.addMouseMotionListener(this);
             super.add(tiles);
+            
+            // add buttons here
+            this.add(exitGame);
+            this.add(gameSave);
+            this.add(gameMenu);
+            this.exitGame.setBounds(540, 200, 200, 20);
+            this.gameSave.setBounds(540, 180, 200, 20);
+            this.gameMenu.setBounds(540, 160, 200, 20);
             this.setVisible(true);
-            this.revalidate();
-            this.repaint();
+            super.revalidate();
+            super.repaint();
             System.out.println("Game started");
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -238,61 +250,84 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("mouse clicked");
-        currentPiece = getPiece(e.getX(), e.getY(), 64);
-        System.out.println(currentPiece.getPieceName());
+        try {
+            System.out.println("mouse clicked");
+            currentPiece = getPiece(e.getX(), e.getY(), 62);
+            System.out.println(currentPiece.getPieceName());
+        } catch (NullPointerException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        currentPiece = getPiece(e.getX(), e.getY(), 64);
+        try {
+            currentPiece = getPiece(e.getX(), e.getY(), 62);
+            System.out.println("X:" + e.getX() + ",Y:" + e.getY());
+            currentPiece.getPieceInfo();
+        } catch (NullPointerException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        try{
-            if(currentPiece.isIsInvert()){
-            // Ai turn boolean
-            currentPiece.move(e.getX() / 64, e.getY() /64, 64);
-            this.repaint();
-            currentPiece = null;
+        try {
+            if (currentPiece.isIsInvert() && !this.isAIturn) {
+                // Ai turn boolean
+                if(counter == 7){
+                    JOptionPane.showMessageDialog(this, "Thanks for playing demo!", "DEMO TIME IS OVER", JOptionPane.PLAIN_MESSAGE);
+                }
+                currentPiece.move(e.getX() / 64, e.getY() / 64, 63);
+
+                this.repaint();
+                this.isAIturn = true;
+
+                if (this.isAIturn == true) {
+                    //System.out.println("COUNTER:"+this.counter);
+                    currentPiece = getPiece(ai.ChessAIPath.get(counter)[0],ai.ChessAIPath.get(counter)[1], 64);
+                    currentPiece.getPieceInfo();
+                    System.out.println("X:" + e.getX() + ",Y:" + e.getY());
+                    currentPiece.move(ai.ChessAIPath.get(counter)[2] / 64, ai.ChessAIPath.get(counter)[3] / 64, 63);
+                    this.isAIturn = false;
+                    counter++;
+                    this.repaint();
+                    currentPiece = null;
+                }
             }
-        }
-        catch(NullPointerException ex){
+
+        } catch (NullPointerException ex) {
             System.out.println(ex.getMessage());
         }
-        
-          }
+
+    }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-          }
+    }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        }
+    }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        try{
-            if(currentPiece != null && currentPiece.isIsInvert())
-            {
-            currentPiece.setX(e.getX() - 34);
-            currentPiece.setY(e.getY() - 54);
-            this.repaint();
+        try {
+            if (currentPiece != null && currentPiece.isIsInvert() && !this.isAIturn) {
+                currentPiece.setX(e.getX() - 34);
+                currentPiece.setY(e.getY() - 54);
+                this.repaint();
             }
-            
-        }
-        catch(NullPointerException ex){
+
+        } catch (NullPointerException ex) {
             System.out.println(ex.getMessage());
         }
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-          }
+    }
 
-    
     public class Tiles extends JPanel {
 
         Image[] temps;
@@ -313,6 +348,7 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
                     }
                     g.fillRect(x * 63, y * 63, 63, 63);
                     isInverted = !isInverted;
+                    //System.out.println("x: " + x + " y:" + y);
                 }
                 isInverted = !isInverted;
             }
@@ -358,7 +394,11 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
         //  this.clearLog.addActionListener(listener);
 
         this.playButton.addActionListener(listener);
+        
+        this.gameMenu.addActionListener(listener);
+        this.gameSave.addActionListener(listener);
     }
+
     // this is where u put optins into this.
     @Override
     public void update(Observable o, Object arg) {
@@ -382,14 +422,16 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
     public JTextField getUserPass() {
         return userPass;
     }
-    public static Piece getPiece(int x, int y,int ratio) {
-        int piece_x = x/ratio;
-        int piece_y = y/ratio;
-        for(Piece piece: LinkedPieces){
-            if(piece.getPiece_x() == piece_x && piece.getPiece_y() == piece_y){
+
+    public static Piece getPiece(int x, int y, int ratio) {
+        int piece_x = x / ratio;
+        int piece_y = y / ratio;
+        for (Piece piece : LinkedPieces) {
+            if (piece.getPiece_x() == piece_x && piece.getPiece_y() == piece_y) {
                 return piece;
             }
         }
         return null;
     }
+
 }

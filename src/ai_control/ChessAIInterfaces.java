@@ -10,5 +10,5 @@ package ai_control;
  * @author quokka
  */
 public interface ChessAIInterfaces {
-    
+      public void InitializeBehaviourSets();
 }

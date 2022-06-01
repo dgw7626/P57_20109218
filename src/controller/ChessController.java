@@ -43,6 +43,9 @@ public class ChessController implements ActionListener{
                 }
             
                 break;
+            case "Game Menu":
+                this.view.gameOptions();
+                break;
             case "Next":
                 System.out.println("next");
                 break;
@@ -60,7 +63,9 @@ public class ChessController implements ActionListener{
                 this.view.inGame();
                 break;
             case "Save":
-                //this.model.saveGameStatus();
+                String savedName = this.model.userName;
+                JOptionPane.showMessageDialog(view, "Player " +savedName + " saved", "Game is saved",JOptionPane.PLAIN_MESSAGE);
+                this.model.saveGameStatus();
                 break;
             case "Exit":
                 //this.model.saveGameStatus();
