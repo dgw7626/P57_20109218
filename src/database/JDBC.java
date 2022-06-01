@@ -21,13 +21,14 @@ import view.ChessView;
 //import java.sql.logging.Level;
 //import java.sql.logging.Logger;
 
-public class JDBC {
+public class JDBC implements JDBCInterfaces {
 
     Connection conn = null;
     String url = "jdbc:derby:gameData;create=true";
     String dbUserName = "chess";
     String dbPassword = "big";
 
+    @Override
     public void startDB() {
         try {
             conn = DriverManager.getConnection(url, dbUserName, dbPassword);
@@ -43,6 +44,7 @@ public class JDBC {
         }
     }
 
+    @Override
     public boolean isTableExist(String tableName) {
         boolean flag = false;
         try {
@@ -68,48 +70,53 @@ public class JDBC {
         return flag;
     }
 
-    public void checkDataElements(){
-        try{
+    @Override
+    public void checkDataElements() {
+        try {
             Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM USERINFO");
-            while(rs.next()){
+            while (rs.next()) {
                 int score = rs.getInt("score");
                 String userName = rs.getString("username");
-                System.out.println("USER NAME:" + userName + " ,PLAYER SCORE:" +score);
+                System.out.println("USER NAME:" + userName + " ,PLAYER SCORE:" + score);
             }
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
-    
-    public void saveGameStatus(String userName, int score){
+
+    @Override
+    public void saveGameStatus(String userName, int score) {
         Statement statement;
-        try{
+        try {
             statement = conn.createStatement();
-            statement.executeUpdate("UPDATE USERINFO SET score=" + score +"WHERE username='" + userName +"'");
-        }
-        catch(SQLException e){
+            statement.executeUpdate("UPDATE USERINFO SET score=" + score + "WHERE username='" + userName + "'");
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
-    public void clearLog(){
-            try {
+
+    @Override
+    public void clearLog() {
+        try {
             conn = DriverManager.getConnection(url, dbUserName, dbPassword);
             Statement statement = conn.createStatement();
             String tableName = "USERINFO";
             if (!isTableExist(tableName)) {
-                statement.executeUpdate("DROP TABLE " + tableName);
+                System.out.println(tableName + " dosent exist");
             }
+            System.out.println("Dropping table");
+            statement.executeQuery("DROP TABLE " + tableName);
             checkDataElements();
             statement.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
-    
-    public chessData checkPlayerName(String username, String password, ChessView view){
-         chessData data = new chessData(); // Initialize an instance of Data.
+
+    @Override
+    public chessData checkPlayerName(String username, String password, ChessView view) {
+        chessData data = new chessData(); // Initialize an instance of Data.
         // ChessView view = new ChessView();
         try {
             Statement statement = conn.createStatement();
@@ -118,14 +125,14 @@ public class JDBC {
             if (rs.next()) {
                 String pass = rs.getString("password");
                 System.out.println("USER Password:" + pass);
-                System.out.println("USER FOUND: "+username);
+                System.out.println("USER FOUND: " + username);
                 /**
                  * If the username exists in the USERINFO table, and the
                  * password is correct, change the value of relating attributes
                  * of data. Otherwise, keep loginFlag as false.
                  */
                 if (password.compareTo(pass) == 0) {
-                    data.setCurrentScore(rs.getInt("score")); 
+                    data.setCurrentScore(rs.getInt("score"));
                     data.setLoginFlag(true);
                 } else {
                     data.setLoginFlag(false);
@@ -136,14 +143,14 @@ public class JDBC {
                  * create a new account by using the inputted username and
                  * password.
                  */
-                JOptionPane.showMessageDialog(view, "User Name: " + username + " has been created.", "Account Created!",JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(view, "User Name: " + username + " has been created.", "Account Created!", JOptionPane.PLAIN_MESSAGE);
                 statement.executeUpdate("INSERT INTO USERINFO "
                         + "VALUES('" + username + "', '" + password + "', 0)");
                 data.setCurrentScore(0);
                 data.setLoginFlag(true);
             }
         } catch (SQLException ex) {
-         //   JOptionPane.showMessageDialog(view, "data dosent exist", "DATA ERROR",JOptionPane.ERROR_MESSAGE);
+            //   JOptionPane.showMessageDialog(view, "data dosent exist", "DATA ERROR",JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(JDBC.class.getName()).log(Level.SEVERE, null, ex);
         }
         return data; //Back to checkName() of Model.java.

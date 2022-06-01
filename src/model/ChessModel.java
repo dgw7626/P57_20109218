@@ -14,7 +14,7 @@ import view.ChessView;
  *
  * @author Admin
  */
-public class ChessModel extends Observable{
+public class ChessModel extends Observable implements ChessModelInterfaces{
     public JDBC db;
     public chessData data;
     
@@ -25,7 +25,7 @@ public class ChessModel extends Observable{
         this.db = new JDBC();
         this.db.startDB();
     }
-    
+    @Override
     public void checkPlayerDBName(String username, String password, ChessView view){
         this.userName = username; // store name;
         this.data = this.db.checkPlayerName(username, password, view);
@@ -37,10 +37,17 @@ public class ChessModel extends Observable{
         this.setChanged();
         this.notifyObservers(this.data);
     }
-    
+    @Override
     public void saveGameStatus(){
         this.db.saveGameStatus(userName, this.data.getCurrentScore());
         this.data.setQuitFlag(true);
+        this.setChanged();
+        this.notifyObservers(this.data);
+    }
+
+    @Override
+    public void clearDataLog() {
+        this.db.clearLog();
         this.setChanged();
         this.notifyObservers(this.data);
     }
