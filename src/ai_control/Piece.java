@@ -10,7 +10,7 @@ import view.ChessView;
 
 /**
  *
- * @author quokka
+ * @author Hanul Rheem 20109218
  */
 public class Piece implements PieceInterfaces {
 
@@ -20,7 +20,7 @@ public class Piece implements PieceInterfaces {
     private int y;
     private boolean isInvert;
     private String pieceName;
-
+    // Piece constructor
     public Piece(int piece_x, int piece_y, boolean isInvert, String pieceName, LinkedList<Piece> linkedPieces, int ratio) {
         this.piece_x = piece_x;
         this.piece_y = piece_y;
@@ -31,7 +31,7 @@ public class Piece implements PieceInterfaces {
         this.pieceName = pieceName;
         linkedPieces.add(this);
     }
-
+    //getting Piece's specific inputs with ratio.
     @Override
     public void move(int pos_X, int pos_Y, int ratio) {
         if (ChessView.getPiece(pos_X * ratio, pos_Y * ratio, 62) != null) {
@@ -48,15 +48,14 @@ public class Piece implements PieceInterfaces {
         x = pos_X * ratio;
         y = pos_Y * ratio;
     }
-
+    //getting Piece's selected information
     @Override
     public void getPieceInfo() {
         System.out.println("Piece x: " + this.x + ",Piece y: " + this.y + ",Piece name:" + this.getPieceName());
     }
-
+    //removing Piece's selecetd position
     @Override
     public void getKill() {
-        // add condition about 
         this.linkedPieces.remove(this);
     }
 

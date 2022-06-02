@@ -27,7 +27,7 @@ public class JDBC implements JDBCInterfaces {
     String url = "jdbc:derby:gameData;create=true";
     String dbUserName = "chess";
     String dbPassword = "big";
-
+    //Initating DB server
     @Override
     public void startDB() {
         try {
@@ -43,7 +43,7 @@ public class JDBC implements JDBCInterfaces {
             System.out.println(e.getMessage());
         }
     }
-
+    //check if the table exists
     @Override
     public boolean isTableExist(String tableName) {
         boolean flag = false;
@@ -69,7 +69,7 @@ public class JDBC implements JDBCInterfaces {
         }
         return flag;
     }
-
+    //check data elements
     @Override
     public void checkDataElements() {
         try {
@@ -84,7 +84,7 @@ public class JDBC implements JDBCInterfaces {
             System.out.println(e.getMessage());
         }
     }
-
+    //check game status
     @Override
     public void saveGameStatus(String userName, int score) {
         Statement statement;
@@ -95,7 +95,7 @@ public class JDBC implements JDBCInterfaces {
             System.out.println(e.getMessage());
         }
     }
-
+    // clears the table
     @Override
     public void clearLog() {
         try {
@@ -113,7 +113,7 @@ public class JDBC implements JDBCInterfaces {
             System.out.println(e.getMessage());
         }
     }
-
+    // checking current player's name
     @Override
     public chessData checkPlayerName(String username, String password, ChessView view) {
         chessData data = new chessData(); // Initialize an instance of Data.

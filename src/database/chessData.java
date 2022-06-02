@@ -6,15 +6,14 @@ package database;
 
 /**
  *
- * @author Admin
+ * @author Hanul Rheem 20109218
  */
 public class chessData {
 
-
+    //chess game data
     private boolean loginFlag = false;
     private boolean quitFlag = false;
     private int currentScore = 0;
-    
         public boolean isLoginFlag() {
         return loginFlag;
     }

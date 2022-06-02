@@ -11,10 +11,10 @@ import view.ChessView;
 
 /**
  *
- * @author quokka
+ * @author Hanul Rheem 20109218
  */
 public class ChessAI implements ChessAIInterfaces{
-    
+    //Initializing AI path selection sets.
     public ArrayList<int[]> ChessAIPath;
     @Override
     public void InitializeBehaviourSets() {

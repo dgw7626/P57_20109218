@@ -7,7 +7,7 @@ package ai_control;
 
 /**
  *
- * @author quokka
+ * @author Hanul Rheem 20109218
  */
 public interface PieceInterfaces {
     public void move(int x, int y,int ratio);

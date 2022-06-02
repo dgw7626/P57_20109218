@@ -10,13 +10,11 @@ import view.ChessView;
 
 /**
  *
- * @author Admin
+ * @author Hanul Rheem 20109218
  */
 public class ChessMVC {
 
-    /**
-     * @param args the command line arguments
-     */
+   // main chess program Model, View, Controller
     public static void main(String[] args) {
         ChessView view = new ChessView();
         ChessModel model = new ChessModel();

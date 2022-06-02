@@ -9,18 +9,21 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import model.ChessModel;
 import view.ChessView;
-
+/**
+ *
+ * @author Hanul Rheem 20109218
+ */
 public class ChessController implements ActionListener{
     public ChessView view;
     public ChessModel model;
-
+    //Chess constructor.
     public ChessController(ChessView view,ChessModel model){
         this.model = model;
         this.view = view;
         this.view.addActionListener(this);
         
     }
-    
+    // listening to button listenrers with button's label value.
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
@@ -31,7 +34,7 @@ public class ChessController implements ActionListener{
                 String password = this.view.getUserPass().getText();
                 if(username != null && password != null){
                     if(username.equalsIgnoreCase("") && password.equalsIgnoreCase("")){
-                         JOptionPane.showMessageDialog(view, "Please retype", "Input Error",JOptionPane.ERROR_MESSAGE);
+                         JOptionPane.showMessageDialog(view, "Please insert passowrd and username", "Input Error",JOptionPane.ERROR_MESSAGE);
                     }
                     else{
                           this.model.checkPlayerDBName(username, password, this.view);
@@ -39,7 +42,7 @@ public class ChessController implements ActionListener{
                 }
                 else
                 {
-                    JOptionPane.showMessageDialog(view, "Please retype", "Input Error",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(view, "Please insert passowrd and username", "Input Error",JOptionPane.ERROR_MESSAGE);
                 }
             
                 break;
@@ -68,7 +71,6 @@ public class ChessController implements ActionListener{
                 this.model.saveGameStatus();
                 break;
             case "Exit":
-                //this.model.saveGameStatus();
                 System.exit(0);
                 break;
         }

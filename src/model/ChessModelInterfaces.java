@@ -9,7 +9,7 @@ import view.ChessView;
 
 /**
  *
- * @author quokka
+ * @author Hanul Rheem 20109218
  */
 public interface ChessModelInterfaces {
     public void checkPlayerDBName(String username, String password, ChessView view);

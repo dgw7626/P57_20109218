@@ -23,12 +23,13 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
 /**
  *
- * @author Admin
+ * @author Hanul Rheem 20109218
  */
 public class ChessView extends JFrame implements Observer, MouseListener, MouseMotionListener {
 
@@ -37,14 +38,13 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
 
     //Player panel
     private JPanel loginPanel = new JPanel();
-    //private BufferedImage img = ImageIO.read(new File("./resources/T06_bg.jpg"));
     private JLabel logo;
     private JLabel userLabel = new JLabel("Username:");
     private JTextField userName = new JTextField(12);
     private JLabel passLabel = new JLabel("Password:");
     private JTextField userPass = new JTextField(12);
     private Font versionFont = new Font("Courier", Font.BOLD, 12);
-    private JLabel version = new JLabel("Chess Game Version 0.2");
+    private JLabel version = new JLabel("Chess Game Version 0.3.9");
     private JButton userLogin = new JButton("Login");
     private boolean isGameActive = false;
 
@@ -68,15 +68,15 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
     public boolean isAIturn = false;
     public ChessAI ai = new ChessAI();
     private int counter = 0;
+    public int playerScore;
+    // view constructor
     public ChessView() {
-        this.setTitle("Chess Program 0.2");
+        this.setTitle("Chess Program 0.3.9");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(300, 200);
         this.setResizable(false);
         this.setLayout(null);
         this.setLocationRelativeTo(null);
-        // setting X and Y positions
-        //setting the logo
         try {
             BufferedImage img = ImageIO.read(new File("./resources/logo.jpg"));
             Image dimg = img.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
@@ -85,7 +85,6 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //loginPanel.setBackground(Color.yellow);
         this.loginPanel.setBackground(Color.WHITE);
         this.loginPanel.setLayout(null);
         this.userLabel.setBounds(20, 20, 120, 10);
@@ -109,17 +108,15 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
         loginPanel.setSize(300, 200);
         this.setVisible(true);
     }
-
+    // welcome screen panel
     public void chessLogin() {
-        this.setTitle("Chess Program 0.2");
+        this.setTitle("Chess Program 0.3.9");
         this.getContentPane().removeAll();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(300, 200);
         this.setResizable(false);
         this.setLayout(null);
         this.setLocationRelativeTo(null);
-        // setting X and Y positions
-        //setting the logo
         try {
             BufferedImage img = ImageIO.read(new File("./resources/logo.jpg"));
             Image dimg = img.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
@@ -128,7 +125,6 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //loginPanel.setBackground(Color.yellow);
         this.loginPanel.setBackground(Color.WHITE);
         this.loginPanel.setLayout(null);
         this.userLabel.setBounds(20, 20, 120, 10);
@@ -157,16 +153,14 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
         this.revalidate();
         this.repaint();
     }
-
+    // game options panel
     public void gameOptions() {
         this.setTitle("Game Options");
         System.out.println("gameOptions");
         this.getContentPane().removeAll();
         this.setSize(400, 400);
-        //this.setLayout(null);
         this.optionPanel.setLayout(null);
         this.optionPanel.setBackground(Color.white);
-        //adding source code from here
         this.optionPanel.add(gameTitle);
         this.gameTitle.setBounds(90, 20, 200, 20);
         this.optionPanel.add(gameWinner);
@@ -175,24 +169,18 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
         this.playButton.setBounds(90, 60, 200, 20);
         this.optionPanel.add(showLog);
         this.showLog.setBounds(90, 80, 200, 20);
-        //  this.optionPanel.add(clearLog);
-        // this.clearLog.setBounds(90, 100, 200, 20);
-
         this.optionPanel.add(loginBack);
         this.loginBack.setBounds(90, 120, 200, 20);
-
         this.optionPanel.add(exitGame);
         this.exitGame.setBounds(90, 140, 200, 20);
-
         this.optionPanel.setSize(new Dimension(400, 400));
         this.optionPanel.setVisible(true);
-
         this.add(optionPanel);
         this.setVisible(true);
         this.revalidate();
         this.repaint();
     }
-
+    // in active game panel
     public void inGame() {
         try {
             this.getContentPane().removeAll();
@@ -209,7 +197,6 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
 
             this.setTitle("Player VS Computer");
             this.setSize(800, 545);
-            // adding pieces
             if (!inGameStatus) {
                 for (int i = 0; i < 8; i++) {
                     this.blackPieces[i] = new Piece(i, 0, false, this.pieceNames[i], LinkedPieces, 63);
@@ -231,8 +218,6 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
             this.tiles.addMouseListener(this);
             this.tiles.addMouseMotionListener(this);
             super.add(tiles);
-            
-            // add buttons here
             this.add(exitGame);
             this.add(gameSave);
             this.add(gameMenu);
@@ -274,17 +259,17 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
     public void mouseReleased(MouseEvent e) {
         try {
             if (currentPiece.isIsInvert() && !this.isAIturn) {
-                // Ai turn boolean
+                this.playerScore = 0;
                 if(counter == 7){
+                    Random random = new Random();
+                    this.playerScore = random.nextInt(100);
+                    
                     JOptionPane.showMessageDialog(this, "Thanks for playing demo!", "DEMO TIME IS OVER", JOptionPane.PLAIN_MESSAGE);
                 }
                 currentPiece.move(e.getX() / 64, e.getY() / 64, 63);
-
                 this.repaint();
                 this.isAIturn = true;
-
                 if (this.isAIturn == true) {
-                    //System.out.println("COUNTER:"+this.counter);
                     currentPiece = getPiece(ai.ChessAIPath.get(counter)[0],ai.ChessAIPath.get(counter)[1], 64);
                     currentPiece.getPieceInfo();
                     System.out.println("X:" + e.getX() + ",Y:" + e.getY());
@@ -348,11 +333,9 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
                     }
                     g.fillRect(x * 63, y * 63, 63, 63);
                     isInverted = !isInverted;
-                    //System.out.println("x: " + x + " y:" + y);
                 }
                 isInverted = !isInverted;
             }
-            // add pieces here
             for (Piece piece : LinkedPieces) {
                 int pos = 0;
                 if (piece.getPieceName().equalsIgnoreCase("king")) {
@@ -384,29 +367,23 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
 
     public void addActionListener(ActionListener listener) {
         this.userLogin.addActionListener(listener);
-        // Game panel
         this.loginBack.addActionListener(listener);
         this.showLog.addActionListener(listener);
         this.playButton.addActionListener(listener);
-
         this.loginBack.addActionListener(listener);
         this.exitGame.addActionListener(listener);
-        //  this.clearLog.addActionListener(listener);
-
         this.playButton.addActionListener(listener);
-        
         this.gameMenu.addActionListener(listener);
         this.gameSave.addActionListener(listener);
     }
 
-    // this is where u put optins into this.
+    // updating input values
     @Override
     public void update(Observable o, Object arg) {
         chessData data = (chessData) arg;
         if (!data.isLoginFlag()) {
             this.getUserName().setText("");
             this.getUserPass().setText("");
-            //  JOptionPane.showMessageDialog(this, "data dosent exist", "DATA ERROR", JOptionPane.ERROR_MESSAGE);
         } else if (!this.isGameActive) {
             this.gameOptions();
             this.isGameActive = true;
