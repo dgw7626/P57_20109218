@@ -44,7 +44,7 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
     private JLabel passLabel = new JLabel("Password:");
     private JTextField userPass = new JTextField(12);
     private Font versionFont = new Font("Courier", Font.BOLD, 12);
-    private JLabel version = new JLabel("Chess Game Version 0.3.9");
+    private JLabel version = new JLabel("Chess Game Version 0.4");
     private JButton userLogin = new JButton("Login");
     private boolean isGameActive = false;
 
@@ -69,9 +69,10 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
     public ChessAI ai = new ChessAI();
     private int counter = 0;
     public int playerScore;
+
     // view constructor
     public ChessView() {
-        this.setTitle("Chess Program 0.3.9");
+        this.setTitle("Chess Program 0.4");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(300, 200);
         this.setResizable(false);
@@ -108,6 +109,7 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
         loginPanel.setSize(300, 200);
         this.setVisible(true);
     }
+
     // welcome screen panel
     public void chessLogin() {
         this.setTitle("Chess Program 0.3.9");
@@ -153,6 +155,7 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
         this.revalidate();
         this.repaint();
     }
+
     // game options panel
     public void gameOptions() {
         this.setTitle("Game Options");
@@ -180,6 +183,7 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
         this.revalidate();
         this.repaint();
     }
+
     // in active game panel
     public void inGame() {
         try {
@@ -260,17 +264,17 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
         try {
             if (currentPiece.isIsInvert() && !this.isAIturn) {
                 this.playerScore = 0;
-                if(counter == 7){
+                if (counter == 7) {
                     Random random = new Random();
                     this.playerScore = random.nextInt(100);
-                    
+
                     JOptionPane.showMessageDialog(this, "Thanks for playing demo!", "DEMO TIME IS OVER", JOptionPane.PLAIN_MESSAGE);
                 }
                 currentPiece.move(e.getX() / 64, e.getY() / 64, 63);
                 this.repaint();
                 this.isAIturn = true;
                 if (this.isAIturn == true) {
-                    currentPiece = getPiece(ai.ChessAIPath.get(counter)[0],ai.ChessAIPath.get(counter)[1], 64);
+                    currentPiece = getPiece(ai.ChessAIPath.get(counter)[0], ai.ChessAIPath.get(counter)[1], 64);
                     currentPiece.getPieceInfo();
                     System.out.println("X:" + e.getX() + ",Y:" + e.getY());
                     currentPiece.move(ai.ChessAIPath.get(counter)[2] / 64, ai.ChessAIPath.get(counter)[3] / 64, 63);
@@ -401,12 +405,22 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
     }
 
     public static Piece getPiece(int x, int y, int ratio) {
-        int piece_x = x / ratio;
-        int piece_y = y / ratio;
-        for (Piece piece : LinkedPieces) {
-            if (piece.getPiece_x() == piece_x && piece.getPiece_y() == piece_y) {
-                return piece;
+        try {
+            if (x != 0 && y != 0 && ratio != 0) {
+                int piece_x = x / ratio;
+                int piece_y = y / ratio;
+                if (LinkedPieces != null) {
+                    for (Piece piece : LinkedPieces) {
+                        if (piece.getPiece_x() == piece_x) {
+                            if (piece.getPiece_y() == piece_y) {
+                                return piece;
+                            }
+                        }
+                    }
+                }
             }
+        } catch (NullPointerException e) {
+            System.out.println("incorrect input and out of field");
         }
         return null;
     }

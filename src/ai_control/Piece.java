@@ -20,6 +20,7 @@ public class Piece implements PieceInterfaces {
     private int y;
     private boolean isInvert;
     private String pieceName;
+
     // Piece constructor
     public Piece(int piece_x, int piece_y, boolean isInvert, String pieceName, LinkedList<Piece> linkedPieces, int ratio) {
         this.piece_x = piece_x;
@@ -31,28 +32,47 @@ public class Piece implements PieceInterfaces {
         this.pieceName = pieceName;
         linkedPieces.add(this);
     }
+
     //getting Piece's specific inputs with ratio.
     @Override
     public void move(int pos_X, int pos_Y, int ratio) {
-        if (ChessView.getPiece(pos_X * ratio, pos_Y * ratio, 62) != null) {
-            if (ChessView.getPiece(pos_X * ratio, pos_Y * ratio, 62).isInvert != isInvert) {
-                ChessView.getPiece(pos_X * ratio, pos_Y * ratio, 62).getKill();
-            } else {
-                x = this.piece_x * ratio;
-                y = this.piece_y * ratio;
-                return;
+        try {
+            int fixed_X = pos_X * ratio;
+            int fixed_Y = pos_Y * ratio;
+            if (pos_X != 0 && pos_Y != 0 && ratio != 0) {
+                if (ChessView.getPiece(fixed_X, fixed_Y, 62) != null) {
+                    if (ChessView.getPiece(fixed_X, fixed_Y, 62).isInvert != isInvert) {
+                        ChessView.getPiece(fixed_X , fixed_Y, 62).getKill();
+                    } else {
+                        x = this.piece_x * ratio;
+                        y = this.piece_y * ratio;
+                        return;
+                    }
+                }
             }
+            revert(true, pos_X, pos_Y,fixed_X,fixed_Y);
+        } catch (NullPointerException e) {
+            System.out.println(e.getMessage());
+            System.out.println("Miss placed values and cant move.");
         }
-        this.piece_x = pos_X;
-        this.piece_y = pos_Y;
-        x = pos_X * ratio;
-        y = pos_Y * ratio;
+    }
+    // checking if ai decision if it wants to revert.
+    public void revert(boolean isRevert, int x, int y, int fixed_X, int fixed_Y){
+        if(isRevert){
+            this.piece_x = x;
+            this.piece_y = y;
+            this.x = fixed_X;
+            this.y = fixed_Y;
+        }else{
+            System.out.println("Revert:" + isRevert);
+        }
     }
     //getting Piece's selected information
     @Override
     public void getPieceInfo() {
         System.out.println("Piece x: " + this.x + ",Piece y: " + this.y + ",Piece name:" + this.getPieceName());
     }
+
     //removing Piece's selecetd position
     @Override
     public void getKill() {
