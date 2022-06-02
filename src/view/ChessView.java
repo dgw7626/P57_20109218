@@ -20,7 +20,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
@@ -33,7 +33,7 @@ import javax.swing.*;
  */
 public class ChessView extends JFrame implements Observer, MouseListener, MouseMotionListener {
 
-    public static LinkedList<Piece> LinkedPieces = new LinkedList<>();
+    public static ArrayList<Piece> LinkedPieces = new ArrayList<>();
     public static Piece currentPiece = null;
 
     //Player panel
@@ -44,7 +44,7 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
     private JLabel passLabel = new JLabel("Password:");
     private JTextField userPass = new JTextField(12);
     private Font versionFont = new Font("Courier", Font.BOLD, 12);
-    private JLabel version = new JLabel("Chess Game Version 0.4");
+    private JLabel version = new JLabel("Chess Game Version 0.4.1");
     private JButton userLogin = new JButton("Login");
     private boolean isGameActive = false;
 
@@ -69,10 +69,10 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
     public ChessAI ai = new ChessAI();
     private int counter = 0;
     public int playerScore;
-
+    
     // view constructor
     public ChessView() {
-        this.setTitle("Chess Program 0.4");
+        this.setTitle("Chess Program 0.4.1");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(300, 200);
         this.setResizable(false);
@@ -112,7 +112,7 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
 
     // welcome screen panel
     public void chessLogin() {
-        this.setTitle("Chess Program 0.3.9");
+        this.setTitle("Chess Program 0.4.1");
         this.getContentPane().removeAll();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(300, 200);
@@ -340,31 +340,17 @@ public class ChessView extends JFrame implements Observer, MouseListener, MouseM
                 }
                 isInverted = !isInverted;
             }
-            for (Piece piece : LinkedPieces) {
+            String[] ChessPieces = {"king","queen","bishop","knight","rock","pawn"};
+            for(int i = 0; i < LinkedPieces.size(); i++){
                 int pos = 0;
-                if (piece.getPieceName().equalsIgnoreCase("king")) {
-                    pos = 0;
-                }
-                if (piece.getPieceName().equalsIgnoreCase("queen")) {
-                    pos = 1;
-                }
-                if (piece.getPieceName().equalsIgnoreCase("bishop")) {
-                    pos = 2;
-                }
-                if (piece.getPieceName().equalsIgnoreCase("knight")) {
-                    pos = 3;
-                }
-                if (piece.getPieceName().equalsIgnoreCase("rook")) {
-                    pos = 4;
-                }
-                if (piece.getPieceName().equalsIgnoreCase("pawn")) {
-                    pos = 5;
-                }
-                if (!piece.isIsInvert()) {
-                    pos += 6;
-                }
-                g.drawImage(temps[pos], piece.getX(), piece.getY(), this);
-
+                if(LinkedPieces.get(i).getPieceName().equalsIgnoreCase(ChessPieces[0])) pos = 0;
+                if(LinkedPieces.get(i).getPieceName().equalsIgnoreCase(ChessPieces[1])) pos = 1;
+                if(LinkedPieces.get(i).getPieceName().equalsIgnoreCase(ChessPieces[2])) pos = 2;
+                if(LinkedPieces.get(i).getPieceName().equalsIgnoreCase(ChessPieces[3])) pos = 3;
+                if(LinkedPieces.get(i).getPieceName().equalsIgnoreCase(ChessPieces[4])) pos = 4;
+                if(LinkedPieces.get(i).getPieceName().equalsIgnoreCase(ChessPieces[5])) pos = 5;
+                if(!LinkedPieces.get(i).isIsInvert()) pos += 6;
+                g.drawImage(temps[pos], LinkedPieces.get(i).getX(), LinkedPieces.get(i).getY(), this);
             }
         }
     }

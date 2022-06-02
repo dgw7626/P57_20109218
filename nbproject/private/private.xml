@@ -4,6 +4,15 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/P57_20109218/src/main/ChessMVC.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/P57_20109218/src/ai_control/PieceInterfaces.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/P57_20109218/src/database/JDBCInterfaces.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/P57_20109218/src/database/chessData.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/P57_20109218/src/database/JDBC.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/P57_20109218/src/view/ChessView.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/P57_20109218/src/model/ChessModelInterfaces.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/P57_20109218/src/ai_control/ChessAI.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/P57_20109218/src/ai_control/ChessAIInterfaces.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/P57_20109218/src/controller/ChessController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/P57_20109218/src/ai_control/Piece.java</file>
         </group>
     </open-files>

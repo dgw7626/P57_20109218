@@ -5,7 +5,7 @@
  */
 package ai_control;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import view.ChessView;
 
 /**
@@ -14,7 +14,7 @@ import view.ChessView;
  */
 public class Piece implements PieceInterfaces {
 
-    LinkedList<Piece> linkedPieces;
+    ArrayList<Piece> linkedPieces;
     private int piece_x, piece_y;
     private int x;
     private int y;
@@ -22,7 +22,7 @@ public class Piece implements PieceInterfaces {
     private String pieceName;
 
     // Piece constructor
-    public Piece(int piece_x, int piece_y, boolean isInvert, String pieceName, LinkedList<Piece> linkedPieces, int ratio) {
+    public Piece(int piece_x, int piece_y, boolean isInvert, String pieceName, ArrayList<Piece> linkedPieces, int ratio) {
         this.piece_x = piece_x;
         this.piece_y = piece_y;
         x = piece_x * ratio;
@@ -41,8 +41,8 @@ public class Piece implements PieceInterfaces {
             int fixed_Y = pos_Y * ratio;
             if (pos_X != 0 && pos_Y != 0 && ratio != 0) {
                 if (ChessView.getPiece(fixed_X, fixed_Y, 62) != null) {
-                    if (ChessView.getPiece(fixed_X, fixed_Y, 62).isInvert != isInvert) {
-                        ChessView.getPiece(fixed_X , fixed_Y, 62).getKill();
+                    if (!ChessView.getPiece(fixed_X, fixed_Y, 62).isInvert && this.isInvert) {
+                        ChessView.getPiece(fixed_X , fixed_Y, 62).removePiece();
                     } else {
                         x = this.piece_x * ratio;
                         y = this.piece_y * ratio;
@@ -75,7 +75,7 @@ public class Piece implements PieceInterfaces {
 
     //removing Piece's selecetd position
     @Override
-    public void getKill() {
+    public void removePiece() {
         this.linkedPieces.remove(this);
     }
 

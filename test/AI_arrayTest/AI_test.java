@@ -43,70 +43,62 @@ public class AI_test {
     public void checkIndex() {
        int[] array = new int[]{1,2,3,4,5};
        boolean isActive = false;
-        for(int i =0; i < 6; i++){
+        for(int i =0; i < 5; i++){
             System.out.println("pos:" +array[i]);
             isActive = true;
         }
-        assertEquals(isActive, true, 0);
+        assertEquals(isActive, true);
     }
     @Test 
     public void checkIndexMin(){
         int[] array = new int[]{1,2,3,4,5};
         boolean isActive = false;
-        for(int i = 0; i < 6; i++){
+        for(int i = 0; i < 5; i++){
             if(i == 0){
                 System.out.println("pos min:" + array[i]);
                 isActive = true;
                 break;
             }
         }
-         assertEquals(isActive, true, 0);
+          assertEquals(isActive, true);
     }
     
     @Test 
     public void checkIndexMax(){
         int[] array = new int[]{1,2,3,4,5};
            boolean isActive = false;
-        for(int i = 0; i < 6; i++){
-            if(i <= 6){
+        for(int i = 0; i < 5; i++){
+            if(i == 4){
                 System.out.println("pos max:" + array[i]);
                   isActive = true;
                 break;
             }
         }
-             assertEquals(isActive, true, 0);
+              assertEquals(isActive, true);
     }
     @Test
     public void checkIndexFind(){
         int[] array = new int[]{1,2,3,4,5};
         int find = 3;
            boolean isActive = false;
-         for(int i = 0; i < 6; i++){
+         for(int i = 0; i < 5; i++){
             if(i == 3){
                 System.out.println("pos find in:" + array[i]);
                       isActive = true;
                 break;
             }
         }
-             assertEquals(isActive, true, 0);
+             assertEquals(isActive, true);
     }
     
     @Test 
     public void checkIndexIterator(){
          int[] array = new int[]{1,2,3,4,5};
               boolean isActive = false;
-         for(int i = 0; i < 6; i++){
+         for(int i = 0; i < 5; i++){
              System.out.println("Iterator check" + i + "values:" + array[i]);
                  isActive = true;
         }
-              assertEquals(isActive, true, 0);
-    }
-
-    private void assertEquals(boolean active, boolean b, int i) {
-        if(active == b){
-            System.out.println("PASSED!");
-        }else{
-            System.out.println("FAILED!");
-        }
+              assertEquals(isActive, true);
     }
 }

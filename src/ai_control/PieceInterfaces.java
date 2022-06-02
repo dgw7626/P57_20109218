@@ -12,6 +12,6 @@ package ai_control;
 public interface PieceInterfaces {
     public void move(int x, int y,int ratio);
     public void getPieceInfo();
-    public void getKill();
+    public void removePiece();
   
 }
